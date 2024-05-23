@@ -11,7 +11,10 @@ from news.forms import BAD_WORDS, WARNING
 def test_user_can_create_comment(
         author_client, news_id_for_args, form_data
 ):
-    """Тест: Авторизованный пользователь может создать комментарий к новости."""
+    """
+    Тест: Авторизованный пользователь может создать
+    комментарий к новости.
+    """
     url = reverse('news:detail', args=news_id_for_args)
     response = author_client.post(url, data=form_data)
     assertRedirects(response, f'{url}#comments')
@@ -39,7 +42,10 @@ def test_anonymous_user_cant_create_comment(
 
 @pytest.mark.django_db
 def test_user_cant_use_bad_words(news_id_for_args, author_client):
-    """Тест: Пользователь не может использовать запрещенные слова в комментарии."""
+    """
+    Тест: Пользователь не может использовать запрещенные
+    слова в комментарии.
+    """
     bad_words_data = {
         'text': f'Какой-то текст, {BAD_WORDS[0]}, еще текст'
     }
