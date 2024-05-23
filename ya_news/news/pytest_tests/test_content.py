@@ -12,8 +12,10 @@ HOME_URL = reverse('news:home')
 
 @pytest.mark.django_db
 def test_news_count(client, all_news):
-    """Тест: Проверка, что на главной странице отображается
-    корректное количество новостей."""
+    """
+    Тест: Проверка, что на главной странице отображается
+    корректное количество новостей.
+    """
     response = client.get(HOME_URL)
     news_count = response.context['object_list'].count()
     assert NEWS_COUNT_ON_HOME_PAGE == news_count
@@ -21,8 +23,10 @@ def test_news_count(client, all_news):
 
 @pytest.mark.django_db
 def test_news_order(client, all_news):
-    """Тест: Проверка, что новости на главной странице отсортированы по дате
-    публикации (от новых к старым)."""
+    """
+    Тест: Проверка, что новости на главной странице отсортированы по дате
+    публикации (от новых к старым).
+    """
     response = client.get(HOME_URL)
     object_list = response.context['object_list']
 
@@ -34,8 +38,10 @@ def test_news_order(client, all_news):
 
 @pytest.mark.django_db
 def test_comments_order(client, ten_comments, news_id_for_args):
-    """Тест: Проверка, что комментарии к новости отсортированы по дате
-    создания (от старых к новым)."""
+    """
+    Тест: Проверка, что комментарии к новости отсортированы по дате
+    создания (от старых к новым).
+    """
     detail_url = reverse('news:detail', args=news_id_for_args)
     response = client.get(detail_url)
 
@@ -68,8 +74,10 @@ def test_comments_order(client, ten_comments, news_id_for_args):
 def test_pages_contains_form_if_authorized(
         parametrized_client, comment_in_list, name, args
 ):
-    """Тест: Проверка, что форма для комментариев отображается только для
-    авторизованных пользователей."""
+    """
+    Тест: Проверка, что форма для комментариев отображается только для
+    авторизованных пользователей.
+    """
     url = reverse(name, args=args)
     response = parametrized_client.get(url)
 

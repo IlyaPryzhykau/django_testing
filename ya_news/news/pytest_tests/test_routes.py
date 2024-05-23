@@ -48,7 +48,10 @@ def test_pages_availability_for_anonymous_user(client, name, args):
 def test_availability_for_comment_edit_and_delete(
         parametrized_client, name, comment_id_for_args, expected_status
 ):
-    """Тест: Проверка доступности страниц редактирования и удаления комментариев."""
+    """
+    Тест: Проверка доступности страниц редактирования
+    и удаления комментариев.
+    """
     url = reverse(name, args=comment_id_for_args)
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
