@@ -19,14 +19,10 @@ NAMES = (
 
 
 class TestRoutes(TestCase):
-    """
-    Тесты для проверки доступности страниц и маршрутов.
-    """
+    """Тесты для проверки доступности страниц и маршрутов."""
     @classmethod
     def setUpTestData(cls):
-        """
-        Создание тестовых данных для всех тестов в классе.
-        """
+        """Создание тестовых данных для всех тестов в классе."""
         cls.author = User.objects.create(username='Лев Толстой')
         cls.note_author = Note.objects.create(
             title='Заголовок',
@@ -36,9 +32,7 @@ class TestRoutes(TestCase):
         )
 
     def test_pages_availability(self):
-        """
-        Тест: Проверка доступности общедоступных страниц.
-        """
+        """Тест: Проверка доступности общедоступных страниц."""
         urls = (
             ('notes:home', None),
             ('users:login', None),
@@ -54,9 +48,7 @@ class TestRoutes(TestCase):
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_availability_for_notes_note_add_edit_delete(self):
-        """
-        Тест: Проверка доступности страниц для добавления, редактирования и удаления заметок.
-        """
+        """Тест: Проверка доступности страниц для добавления, редактирования и удаления заметок."""
         users_statuses = (
             (self.author, HTTPStatus.OK),
             (None, HTTPStatus.FOUND),
@@ -78,9 +70,7 @@ class TestRoutes(TestCase):
                     self.assertEqual(response.status_code, status)
 
     def test_redirect_for_anonymous_user(self):
-        """
-        Тест: Проверка перенаправления анонимного пользователя.
-        """
+        """Тест: Проверка перенаправления анонимного пользователя."""
         login_url = reverse('users:login')
 
         for name in NAMES:

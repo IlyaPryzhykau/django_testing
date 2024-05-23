@@ -21,9 +21,7 @@ LOGIN_URL = reverse('users:login')
     )
 )
 def test_pages_availability_for_anonymous_user(client, name, args):
-    """
-    Тест проверяет доступность страниц для анонимного пользователя.
-    """
+    """Тест проверяет доступность страниц для анонимного пользователя."""
     url = reverse(name, args=args)
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
@@ -50,9 +48,7 @@ def test_pages_availability_for_anonymous_user(client, name, args):
 def test_availability_for_comment_edit_and_delete(
         parametrized_client, name, comment_id_for_args, expected_status
 ):
-    """
-    Тест проверяет доступность страниц редактирования и удаления комментариев.
-    """
+    """Тест проверяет доступность страниц редактирования и удаления комментариев."""
     url = reverse(name, args=comment_id_for_args)
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
@@ -66,8 +62,10 @@ def test_availability_for_comment_edit_and_delete(
     ),
 )
 def test_redirect_for_anonymous_client(client, name, args):
+    """Тест проверяет, что анонимный клиент перенаправляется на страницу входа."""
     login_url = LOGIN_URL
     url = reverse(name, args=args)
     expected_url = f'{login_url}?next={url}'
     response = client.get(url)
     assertRedirects(response, expected_url)
+
