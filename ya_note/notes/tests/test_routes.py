@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from notes.models import Note
 
+
 User = get_user_model()
 
 NAMES = (
@@ -48,7 +49,7 @@ class TestRoutes(TestCase):
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_availability_for_notes_note_add_edit_delete(self):
-        """Тест: Проверка доступности страниц для добавления, редактирования и удаления заметок."""
+        """Тест: Проверка доступности страниц."""
         users_statuses = (
             (self.author, HTTPStatus.OK),
             (None, HTTPStatus.FOUND),

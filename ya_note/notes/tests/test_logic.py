@@ -31,7 +31,7 @@ class TestNoteCreation(TestCase):
         cls.login_url = reverse('users:login')
 
     def test_user_can_create_note_with_slug(self):
-        """Тест: Пользователь может создать заметку с уникальным идентификатором (slug)."""
+        """Тест: Пользователь может создать заметку с указанием (slug)."""
         self.client.force_login(self.author)
 
         response = self.client.post(self.add_url, {**self.NOTE, **self.SLUG})
@@ -40,7 +40,7 @@ class TestNoteCreation(TestCase):
         self.assertTrue(Note.objects.filter(slug=self.SLUG['slug']).exists())
 
     def test_user_can_create_note_without_slug(self):
-        """Тест: Пользователь может создать заметку без указания идентификатора (slug)."""
+        """Тест: Пользователь может создать заметку без указания (slug)."""
         self.client.force_login(self.author)
 
         response = self.client.post(self.add_url, self.NOTE)
@@ -64,14 +64,20 @@ class TestNoteCreation(TestCase):
             errors=f'{self.SLUG["slug"]}{WARNING}'
         )
         self.assertRedirects(response1, self.success_url)
-        self.assertEqual(Note.objects.filter(slug=self.SLUG['slug']).count(), notes_count)
+        self.assertEqual(
+            Note.objects.filter(slug=self.SLUG['slug']).count(), notes_count
+        )
 
     def test_anonymous_user_cannot_create_note(self):
         """Тест: Анонимный пользователь не может создать заметку."""
         response = self.client.post(self.add_url, self.NOTE)
 
-        self.assertRedirects(response, f"{self.login_url}?next={self.add_url}")
-        self.assertFalse(Note.objects.filter(title=self.NOTE['title']).exists())
+        self.assertRedirects(
+            response, f"{self.login_url}?next={self.add_url}"
+        )
+        self.assertFalse(
+            Note.objects.filter(title=self.NOTE['title']).exists()
+        )
 
 
 class TestCommentEditDelete(TestCase):
@@ -135,8 +141,11 @@ class TestCommentEditDelete(TestCase):
         self.assertEqual(self.note.text, self.NEW_COMMENT_TEXT)
 
     def test_user_cant_edit_note_of_another_user(self):
-        """Тест: Пользователь не может редактировать заметку другого пользователя."""
-        response = self.other_author_client.post(self.edit_url, data=self.form_data)
+        """Тест: Автор может редактировать только свою заметку."""
+        response = self.other_author_client.post(
+            self.edit_url,
+            data=self.form_data
+        )
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
         self.note.refresh_from_db()

@@ -40,7 +40,7 @@ class TestNotesPage(TestCase):
         )
 
     def test_note_in_object_list(self):
-        """Тест: Отдельная заметка передаётся на страницу со списком заметок в списке object_list"""
+        """Тест: Заметка передаётся на страницу в списке object_list"""
         self.client.force_login(self.author)
         response = self.client.get(self.NOTES_LIST)
         object_list = response.context['object_list']
@@ -48,7 +48,7 @@ class TestNotesPage(TestCase):
         self.assertIn(self.notes[0], object_list)
 
     def test_other_user_notes_not_in_list(self):
-        """Тест: В список заметок одного пользователя не попадают заметки другого пользователя."""
+        """Тест: Созданные заметки не попадают заметки другого пользователя."""
         self.client.force_login(self.author)
         response = self.client.get(self.NOTES_LIST)
         object_list = response.context['object_list']
@@ -83,7 +83,7 @@ class TestNotesPage(TestCase):
         self.assertEqual(notes_count, self.NOTES_COUNT_ON_NOTES_LIST)
 
     def test_notes_order(self):
-        """Тест: Проверка правильного порядка отображения заметок на странице."""
+        """Тест: Проверка, что заметки отсортированы по дате."""
         self.client.force_login(self.author)
 
         response = self.client.get(self.NOTES_LIST)
