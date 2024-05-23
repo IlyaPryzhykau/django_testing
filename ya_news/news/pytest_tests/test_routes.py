@@ -24,7 +24,6 @@ def test_pages_availability_for_anonymous_user(client, name, args):
     """
     Тест проверяет доступность страниц для анонимного пользователя.
     """
-
     url = reverse(name, args=args)
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
@@ -54,7 +53,6 @@ def test_availability_for_comment_edit_and_delete(
     """
     Тест проверяет доступность страниц редактирования и удаления комментариев.
     """
-
     url = reverse(name, args=comment_id_for_args)
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
@@ -73,4 +71,3 @@ def test_redirect_for_anonymous_client(client, name, args):
     expected_url = f'{login_url}?next={url}'
     response = client.get(url)
     assertRedirects(response, expected_url)
-

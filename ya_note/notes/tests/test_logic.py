@@ -15,7 +15,6 @@ class TestNoteCreation(TestCase):
     """
     Тесты для создания заметок.
     """
-
     NOTE = {
         'title': 'Новая заметка',
         'text': 'Текст новой заметки'
@@ -30,7 +29,6 @@ class TestNoteCreation(TestCase):
         """
         Создание тестовых данных для всех тестов в классе.
         """
-
         cls.author = User.objects.create(username='Лев Толстой')
         cls.add_url = reverse('notes:add')
         cls.success_url = reverse('notes:success')
@@ -40,7 +38,6 @@ class TestNoteCreation(TestCase):
         """
         Тест: Пользователь может создать заметку с уникальным идентификатором (slug).
         """
-
         self.client.force_login(self.author)
 
         response = self.client.post(self.add_url, {**self.NOTE, **self.SLUG})
@@ -52,7 +49,6 @@ class TestNoteCreation(TestCase):
         """
         Тест: Пользователь может создать заметку без указания идентификатора (slug).
         """
-
         self.client.force_login(self.author)
 
         response = self.client.post(self.add_url, self.NOTE)
@@ -64,7 +60,6 @@ class TestNoteCreation(TestCase):
         """
         Тест: Идентификатор (slug) заметки должен быть уникальным.
         """
-
         self.client.force_login(self.author)
 
         response1 = self.client.post(self.add_url, {**self.NOTE, **self.SLUG})
@@ -85,7 +80,6 @@ class TestNoteCreation(TestCase):
         """
         Тест: Анонимный пользователь не может создать заметку.
         """
-
         response = self.client.post(self.add_url, self.NOTE)
 
         self.assertRedirects(response, f"{self.login_url}?next={self.add_url}")
@@ -96,7 +90,6 @@ class TestCommentEditDelete(TestCase):
     """
     Тесты для редактирования и удаления заметок.
     """
-
     TITLE = 'Новая заметка'
     COMMENT_TEXT = 'Текст комментария'
     NEW_COMMENT_TEXT = 'Обновлённый комментарий'
@@ -106,7 +99,6 @@ class TestCommentEditDelete(TestCase):
         """
         Создание тестовых данных для всех тестов в классе.
         """
-
         cls.author = User.objects.create(username='Лев Толстой')
         cls.author_client = Client()
         cls.author_client.force_login(cls.author)
@@ -134,7 +126,6 @@ class TestCommentEditDelete(TestCase):
         """
         Тест: Автор может удалить свою заметку.
         """
-
         initial_notes_count = Note.objects.count()
 
         response = self.author_client.delete(self.delete_url)
@@ -147,7 +138,6 @@ class TestCommentEditDelete(TestCase):
         """
         Тест: Другой пользователь не может удалить чужую заметку.
         """
-
         initial_notes_count = Note.objects.count()
 
         response = self.other_author_client.delete(self.delete_url)
@@ -160,7 +150,6 @@ class TestCommentEditDelete(TestCase):
         """
         Тест: Автор может редактировать свою заметку.
         """
-
         response = self.author_client.post(self.edit_url, data=self.form_data)
         self.assertRedirects(response, self.success_url)
 
@@ -171,7 +160,6 @@ class TestCommentEditDelete(TestCase):
         """
         Тест: Пользователь не может редактировать заметку другого пользователя.
         """
-
         response = self.other_author_client.post(self.edit_url, data=self.form_data)
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 

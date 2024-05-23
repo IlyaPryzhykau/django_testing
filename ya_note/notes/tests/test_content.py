@@ -12,7 +12,6 @@ class TestNotesPage(TestCase):
     """
     Тесты для проверки страницы со списком заметок.
     """
-
     NOTES_LIST = reverse('notes:list')
     NOTES_COUNT_ON_NOTES_LIST = 10
 
@@ -21,7 +20,6 @@ class TestNotesPage(TestCase):
         """
         Создание тестовых данных для всех тестов в классе.
         """
-
         cls.author = User.objects.create(username='Лев Толстой')
         cls.other_user = User.objects.create(username='Саня Пушкин')
 
@@ -49,7 +47,6 @@ class TestNotesPage(TestCase):
         Тест: Отдельная заметка передаётся на страницу со списком
         заметок в списке object_list, в словаре context.
         """
-
         self.client.force_login(self.author)
         response = self.client.get(self.NOTES_LIST)
         object_list = response.context['object_list']
@@ -58,10 +55,8 @@ class TestNotesPage(TestCase):
 
     def test_other_user_notes_not_in_list(self):
         """
-        Тест: В список заметок одного пользователя
-        не попадают заметки другого пользователя.
+        Тест: В список заметок одного пользователя не попадают заметки другого пользователя.
         """
-
         self.client.force_login(self.author)
         response = self.client.get(self.NOTES_LIST)
         object_list = response.context['object_list']
@@ -72,7 +67,6 @@ class TestNotesPage(TestCase):
         """
         Тест: На страницу создания заметки передаётся форма.
         """
-
         self.client.force_login(self.author)
         add_url = reverse('notes:add')
         response = self.client.get(add_url)
@@ -84,7 +78,6 @@ class TestNotesPage(TestCase):
         """
         Тест: На страницу редактирования заметки передаётся форма.
         """
-
         self.client.force_login(self.author)
         edit_url = reverse('notes:edit', args=(self.notes[0].slug,))
         response = self.client.get(edit_url)
@@ -96,7 +89,6 @@ class TestNotesPage(TestCase):
         """
         Тест: Проверка правильного количества заметок на странице.
         """
-
         self.client.force_login(self.author)
 
         response = self.client.get(self.NOTES_LIST)
@@ -108,7 +100,6 @@ class TestNotesPage(TestCase):
         """
         Тест: Проверка правильного порядка отображения заметок на странице.
         """
-
         self.client.force_login(self.author)
 
         response = self.client.get(self.NOTES_LIST)
