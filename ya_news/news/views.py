@@ -39,7 +39,7 @@ class NewsDetail(generic.DetailView):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['form'] = CommentForm()
-        comments = self.object.comment_set.all()  # Получаем комментарии для этой новости
+        comments = self.object.comment_set.all()  # Получаем комментарии
         context['comments'] = comments  # Добавляем комментарии в контекст
         return context
 
