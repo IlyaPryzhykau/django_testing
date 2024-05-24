@@ -43,51 +43,59 @@ class TestNotesPage(TestCase):
         """Тест: Заметка передаётся на страницу в списке object_list"""
         self.client.force_login(self.author)
         response = self.client.get(self.NOTES_LIST)
-        object_list = response.context['object_list']
+        object_list = response.context.get('object_list')
 
+        self.assertIsNotNone(object_list)
         self.assertIn(self.notes[0], object_list)
 
     def test_other_user_notes_not_in_list(self):
-        """Тест: Созданные заметки не попадают заметки другого пользователя."""
+        """
+        Тест: Созданные заметки не попадают заметки
+        другого пользователя.
+        """
         self.client.force_login(self.author)
         response = self.client.get(self.NOTES_LIST)
-        object_list = response.context['object_list']
+        object_list = response.context.get('object_list')
 
+        self.assertIsNotNone(object_list)
         self.assertNotIn(self.other_note, object_list)
 
-    def test_note_add_page_contains_form(self):
-        """Тест: На страницу создания заметки передаётся форма."""
+    def test_note_pages_contain_form(self):
+        """
+        Тест: На страницы создания и редактирования
+        заметки передаётся форма.
+        """
         self.client.force_login(self.author)
-        add_url = reverse('notes:add')
-        response = self.client.get(add_url)
 
-        self.assertIn('form', response.context)
-        self.assertIsInstance(response.context['form'], NoteForm)
+        urls = {
+            'add': reverse('notes:add'),
+            'edit': reverse('notes:edit', args=(self.notes[0].slug,))
+        }
 
-    def test_note_edit_page_contains_form(self):
-        """Тест: На страницу редактирования заметки передаётся форма."""
-        self.client.force_login(self.author)
-        edit_url = reverse('notes:edit', args=(self.notes[0].slug,))
-        response = self.client.get(edit_url)
-
-        self.assertIn('form', response.context)
-        self.assertIsInstance(response.context['form'], NoteForm)
+        for name, url in urls.items():
+            with self.subTest(page=name):
+                response = self.client.get(url)
+                self.assertIn('form', response.context)
+                self.assertIsInstance(response.context['form'], NoteForm)
 
     def test_notes_count(self):
         """Тест: Проверка правильного количества заметок на странице."""
         self.client.force_login(self.author)
 
         response = self.client.get(self.NOTES_LIST)
-        notes_count = response.context['object_list'].count()
+        object_list = response.context.get('object_list')
 
-        self.assertEqual(notes_count, self.NOTES_COUNT_ON_NOTES_LIST)
+        self.assertIsNotNone(object_list)
+        self.assertEqual(object_list.count(), self.NOTES_COUNT_ON_NOTES_LIST)
 
     def test_notes_order(self):
         """Тест: Проверка, что заметки отсортированы по дате."""
         self.client.force_login(self.author)
 
         response = self.client.get(self.NOTES_LIST)
-        object_list = response.context['object_list']
+        object_list = response.context.get('object_list')
+
+        self.assertIsNotNone(object_list)
 
         all_notes = [note.id for note in object_list]
         sorted_dates = sorted(all_notes)
