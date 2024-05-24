@@ -2,11 +2,14 @@ import pytest
 
 from django.test.client import Client
 from django.utils import timezone
+from django.conf import settings
 
 from datetime import timedelta
 
 from news.models import Comment, News
-from yanews.settings import NEWS_COUNT_ON_HOME_PAGE
+
+
+COUNT_OF_COMMENTS = 10
 
 
 @pytest.fixture
@@ -23,7 +26,7 @@ def all_news():
             text='Просто текст.',
             date=today - timedelta(days=index)
         )
-        for index in range(NEWS_COUNT_ON_HOME_PAGE + 1)
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
     ]
     News.objects.bulk_create(all_news)
     return all_news
@@ -73,7 +76,7 @@ def ten_comments(author_of_comment, news):
             text=f'Текст комментария {index}',
             created=today - timedelta(days=index)
         )
-        for index in range(10)
+        for index in range(COUNT_OF_COMMENTS)
     ]
     return comments_list
 
